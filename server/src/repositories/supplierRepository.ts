@@ -1,5 +1,5 @@
 import { AppError } from "../utils";
-import Supplier, { ISupplier } from "../models/Supplier";
+import { Supplier, ISupplier } from "../models/Supplier";
 import { validateObjectIdOrThrow } from "../validations";
 
 class SupplierRepository {

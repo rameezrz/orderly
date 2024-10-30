@@ -2,9 +2,10 @@ import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
 import { errorHandler, requestLogger } from "./middlewares";
-import supplierRoutes from "./routes/supplierRoutes";
 import { swaggerDocs } from "./swaggerOptions";
 import swaggerUi from "swagger-ui-express";
+import supplierRoutes from "./routes/supplierRoutes";
+import itemRoutes from "./routes/itemRoutes";
 
 dotenv.config();
 
@@ -21,6 +22,7 @@ app.get("/", (req, res) => {
 });
 
 app.use("/api/v1/suppliers", supplierRoutes);
+app.use("/api/v1/items", itemRoutes);
 
 app.use((req, res) => {
   res.status(404).json({ message: "Route not found" });

@@ -1,8 +1,23 @@
-import mongoose from "mongoose";
+import mongoose, { Document } from "mongoose";
 
-const ItemSchema = new mongoose.Schema(
+export interface IItem extends Document {
+  itemNo: string;
+  itemName: string;
+  inventoryLocation?: string;
+  brand?: string;
+  category?: string;
+  supplier: mongoose.Schema.Types.ObjectId;
+  stockUnit?: string;
+  unitPrice: number;
+  itemImages?: string[];
+  status?: "Enabled" | "Disabled";
+  createdAt?: Date;
+  updatedAt?: Date;
+}
+
+const itemSchema = new mongoose.Schema(
   {
-    itemNo: { type: String, unique: true, required: true },
+    itemNo: { type: String, unique: true },
     itemName: { type: String, required: true },
     inventoryLocation: String,
     brand: String,
@@ -18,6 +33,20 @@ const ItemSchema = new mongoose.Schema(
   }
 );
 
-const Item = mongoose.model("Item", ItemSchema);
+itemSchema.pre("save", async function (next) {
+  if (!this.itemNo) {
+    const lastSupplier = await mongoose
+      .model<IItem>("Item")
+      .findOne({})
+      .sort({ itemNo: -1 });
 
-export default Item;
+    const lastNumber = lastSupplier
+      ? parseInt(lastSupplier.itemNo.replace("ITM-", ""), 10)
+      : 0;
+
+    this.itemNo = `ITM-${lastNumber + 1}`;
+  }
+  next();
+});
+
+export const Item = mongoose.model<IItem>("Item", itemSchema);

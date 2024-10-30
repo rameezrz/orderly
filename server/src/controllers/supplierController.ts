@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from "express";
-import supplierRepository from "../repositories/supplierRepository";
+import { supplierRepository } from "../repositories";
 import { AppError } from "../utils";
 
 export const createSupplier = async (
