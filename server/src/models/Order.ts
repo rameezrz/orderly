@@ -1,8 +1,28 @@
-import mongoose from "mongoose";
+import mongoose, { Document, Schema, Types } from "mongoose";
 
-const OrderSchema = new mongoose.Schema(
+export interface IOrderItem {
+  item: Types.ObjectId;
+  orderQty: number;
+  discount?: number;
+  itemAmount: number;
+  netAmount: number;
+}
+
+export interface IOrder extends Document {
+  orderNo: string;
+  orderDate: Date;
+  supplier: Types.ObjectId;
+  items: IOrderItem[];
+  itemTotal: number;
+  discountTotal: number;
+  netAmount: number;
+  createdAt?: Date;
+  updatedAt?: Date;
+}
+
+const orderSchema = new Schema<IOrder>(
   {
-    orderNo: { type: String, unique: true, required: true },
+    orderNo: { type: String, unique: true },
     orderDate: { type: Date, default: Date.now },
     supplier: { type: mongoose.Schema.Types.ObjectId, ref: "Supplier" },
     items: [
@@ -23,6 +43,20 @@ const OrderSchema = new mongoose.Schema(
   }
 );
 
-const Order = mongoose.model("Order", OrderSchema);
+orderSchema.pre("save", async function (next) {
+  if (!this.orderNo) {
+    const lastOrder = await mongoose
+      .model<IOrder>("Order")
+      .findOne({})
+      .sort({ orderNo: -1 });
 
-export default Order;
+    const lastNumber = lastOrder
+      ? parseInt(lastOrder.orderNo.replace("ORD-", ""), 10)
+      : 0;
+
+    this.orderNo = `ORD-${lastNumber + 1}`;
+  }
+  next();
+});
+
+export const Order = mongoose.model<IOrder>("Order", orderSchema);

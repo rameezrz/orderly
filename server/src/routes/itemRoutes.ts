@@ -7,7 +7,7 @@ import {
   getItemById,
   updateItem,
   deleteItem,
-} from "../controllers/itemController";
+} from "../controllers";
 import { upload } from "../config";
 
 const router = express.Router();

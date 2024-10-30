@@ -6,6 +6,7 @@ import { swaggerDocs } from "./swaggerOptions";
 import swaggerUi from "swagger-ui-express";
 import supplierRoutes from "./routes/supplierRoutes";
 import itemRoutes from "./routes/itemRoutes";
+import orderRoutes from "./routes/orderRoutes";
 
 dotenv.config();
 
@@ -23,6 +24,7 @@ app.get("/", (req, res) => {
 
 app.use("/api/v1/suppliers", supplierRoutes);
 app.use("/api/v1/items", itemRoutes);
+app.use("/api/v1/orders", orderRoutes);
 
 app.use((req, res) => {
   res.status(404).json({ message: "Route not found" });
