@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 import app from "./app";
-import { ENV } from "./config/env";
+import { ENV } from "./config";
 
 const PORT = ENV.PORT || 5000;
 const DATABASE_URL = ENV.DATABASE_URL;

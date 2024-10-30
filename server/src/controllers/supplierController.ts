@@ -1,5 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import supplierRepository from "../repositories/supplierRepository";
+import { AppError } from "../utils";
 
 export const createSupplier = async (
   req: Request,
@@ -20,8 +21,25 @@ export const getSuppliers = async (
   next: NextFunction
 ) => {
   try {
-    const suppliers = await supplierRepository.getAllSuppliers();
-    res.status(200).json(suppliers);
+    const page = parseInt(req.query.page as string) || 1;
+    const limit = parseInt(req.query.limit as string) || 10;
+
+    if (page < 1 || limit < 1) {
+      throw new AppError("Page and limit must be positive integers.", 400);
+    }
+
+    const suppliers = await supplierRepository.getAllSuppliers(page, limit);
+
+    const totalSuppliers = await supplierRepository.getSupplierCount();
+    const totalPages = Math.ceil(totalSuppliers / limit);
+
+    res.status(200).json({
+      page,
+      limit,
+      totalSuppliers,
+      totalPages,
+      suppliers,
+    });
   } catch (error) {
     next(error);
   }

@@ -24,8 +24,16 @@ class SupplierRepository {
     return supplier;
   }
 
-  async getAllSuppliers(): Promise<ISupplier[]> {
-    return await Supplier.find().exec();
+  async getSupplierCount(): Promise<number> {
+    return await Supplier.countDocuments().exec();
+  }
+
+  async getAllSuppliers(
+    page: number = 1,
+    limit: number = 10
+  ): Promise<ISupplier[]> {
+    const skip = (page - 1) * limit;
+    return await Supplier.find().skip(skip).limit(limit).exec();
   }
 
   async updateSupplier(
