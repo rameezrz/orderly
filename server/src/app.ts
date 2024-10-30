@@ -3,10 +3,14 @@ import cors from "cors";
 import dotenv from "dotenv";
 import { errorHandler, requestLogger } from "./middlewares";
 import supplierRoutes from "./routes/supplierRoutes";
+import { swaggerDocs } from "./swaggerOptions";
+import swaggerUi from "swagger-ui-express";
 
 dotenv.config();
 
 const app = express();
+
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 
 app.use(cors());
 app.use(express.json());

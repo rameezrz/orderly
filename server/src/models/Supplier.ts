@@ -11,20 +11,25 @@ export interface ISupplier extends Document {
   status: "Active" | "Inactive" | "Blocked";
 }
 
-const supplierSchema = new Schema<ISupplier>({
-  supplierNo: { type: String, unique: true },
-  supplierName: { type: String, required: true },
-  address: { type: String },
-  taxNo: { type: String },
-  country: { type: String, required: true },
-  mobileNo: { type: String, required: true },
-  email: { type: String, required: true, unique: true },
-  status: {
-    type: String,
-    enum: ["Active", "Inactive", "Blocked"],
-    default: "Active",
+const supplierSchema = new Schema<ISupplier>(
+  {
+    supplierNo: { type: String, unique: true },
+    supplierName: { type: String, required: true },
+    address: { type: String },
+    taxNo: { type: String },
+    country: { type: String, required: true },
+    mobileNo: { type: String, required: true },
+    email: { type: String, required: true, unique: true },
+    status: {
+      type: String,
+      enum: ["Active", "Inactive", "Blocked"],
+      default: "Active",
+    },
   },
-});
+  {
+    timestamps: true,
+  }
+);
 
 supplierSchema.pre("save", async function (next) {
   if (!this.supplierNo) {
