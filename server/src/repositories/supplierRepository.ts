@@ -33,7 +33,11 @@ class SupplierRepository {
     limit: number = 10
   ): Promise<ISupplier[]> {
     const skip = (page - 1) * limit;
-    return await Supplier.find().skip(skip).limit(limit).exec();
+    return await Supplier.find()
+      .sort({ supplierNo: 1 })
+      .skip(skip)
+      .limit(limit)
+      .exec();
   }
 
   async getAllActiveSuppliersNames(): Promise<
@@ -42,7 +46,9 @@ class SupplierRepository {
     return await Supplier.find(
       { status: "Active" },
       { supplierNo: 1, supplierName: 1, _id: 1 }
-    ).exec();
+    )
+      .sort({ supplierNo: 1 })
+      .exec();
   }
 
   async updateSupplier(

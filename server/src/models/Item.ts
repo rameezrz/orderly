@@ -44,7 +44,7 @@ itemSchema.pre("save", async function (next) {
       ? parseInt(lastSupplier.itemNo.replace("ITM-", ""), 10)
       : 0;
 
-    this.itemNo = `ITM-${lastNumber + 1}`;
+    this.itemNo = `ITM-${String(lastNumber + 1).padStart(3, "0")}`;
   }
   next();
 });

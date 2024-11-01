@@ -42,7 +42,7 @@ supplierSchema.pre("save", async function (next) {
       ? parseInt(lastSupplier.supplierNo.replace("SUP-", ""), 10)
       : 0;
 
-    this.supplierNo = `SUP-${lastNumber + 1}`;
+    this.supplierNo = `SUP-${String(lastNumber + 1).padStart(3, "0")}`;
   }
   next();
 });

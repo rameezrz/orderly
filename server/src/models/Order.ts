@@ -59,7 +59,7 @@ orderSchema.pre("save", async function (next) {
       ? parseInt(lastOrder.orderNo.replace("ORD-", ""), 10)
       : 0;
 
-    this.orderNo = `ORD-${lastNumber + 1}`;
+    this.orderNo = `ORD-${String(lastNumber + 1).padStart(3, "0")}`;
   }
   next();
 });
