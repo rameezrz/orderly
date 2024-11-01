@@ -4,7 +4,7 @@ import { AppError } from "../utils";
 
 class OrderRepository {
   async createOrder(data: Partial<IOrder>): Promise<IOrder> {
-    const { supplier, items } = data;
+    const { supplier, orderDate, items } = data;
 
     if (!items) {
       throw new AppError("Items are required", 400);
@@ -42,6 +42,7 @@ class OrderRepository {
 
     const newOrder = new Order({
       supplier,
+      orderDate,
       items: orderItems,
       itemTotal,
       discountTotal,

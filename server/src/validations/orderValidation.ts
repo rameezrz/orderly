@@ -7,6 +7,7 @@ const orderItemSchema = Joi.object({
 });
 
 export const createOrderSchema = Joi.object({
+  orderDate: Joi.date(),
   supplier: Joi.string().required(),
   items: Joi.array().items(orderItemSchema).min(1).required(),
 });

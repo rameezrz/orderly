@@ -23,7 +23,7 @@ export interface IOrder extends Document {
 const orderSchema = new Schema<IOrder>(
   {
     orderNo: { type: String, unique: true },
-    orderDate: { type: Date, default: Date.now },
+    orderDate: { type: Date },
     supplier: { type: mongoose.Schema.Types.ObjectId, ref: "Supplier" },
     items: [
       {
