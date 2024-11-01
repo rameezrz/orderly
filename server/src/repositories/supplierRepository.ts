@@ -36,6 +36,15 @@ class SupplierRepository {
     return await Supplier.find().skip(skip).limit(limit).exec();
   }
 
+  async getAllActiveSuppliersNames(): Promise<
+    Pick<ISupplier, "supplierNo" | "supplierName" | "_id">[]
+  > {
+    return await Supplier.find(
+      { status: "Active" },
+      { supplierNo: 1, supplierName: 1, _id: 1 }
+    ).exec();
+  }
+
   async updateSupplier(
     id: string,
     data: Partial<ISupplier>

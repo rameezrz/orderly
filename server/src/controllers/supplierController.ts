@@ -45,6 +45,22 @@ export const getSuppliers = async (
   }
 };
 
+export const getAllActiveSuppliersNames = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const suppliers = await supplierRepository.getAllActiveSuppliersNames();
+
+    res.status(200).json({
+      suppliers,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
 export const getSupplierById = async (
   req: Request,
   res: Response,
