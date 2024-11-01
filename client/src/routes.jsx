@@ -1,6 +1,20 @@
-import { HomeIcon, InformationCircleIcon } from "@heroicons/react/24/solid";
-import { Home, Suppliers, SupplierForm } from "@/pages/dashboard";
-import { ItemForm, ViewItems, ViewSingleItem } from "./pages";
+import {
+  HomeIcon,
+  UsersIcon,
+  UserPlusIcon,
+  Squares2X2Icon,
+  SquaresPlusIcon,
+  DocumentDuplicateIcon,
+  DocumentPlusIcon,
+} from "@heroicons/react/24/solid";
+import {
+  Home,
+  Suppliers,
+  SupplierForm,
+  ItemForm,
+  ViewItems,
+  ViewSingleItem,
+} from "./pages";
 
 const icon = {
   className: "w-5 h-5 text-inherit",
@@ -23,13 +37,13 @@ export const routes = [
     layout: "dashboard",
     pages: [
       {
-        icon: <InformationCircleIcon {...icon} />,
+        icon: <UsersIcon {...icon} />,
         name: "view suppliers",
         path: "/suppliers",
         element: <Suppliers />,
       },
       {
-        icon: <InformationCircleIcon {...icon} />,
+        icon: <UserPlusIcon {...icon} />,
         name: "add Supplier",
         path: "/add-supplier",
         element: <SupplierForm key={"add-supplier"} mode="create" />,
@@ -41,14 +55,32 @@ export const routes = [
     layout: "dashboard",
     pages: [
       {
-        icon: <InformationCircleIcon {...icon} />,
+        icon: <Squares2X2Icon {...icon} />,
         name: "view Items",
         path: "/items",
         element: <ViewItems />,
       },
       {
-        icon: <InformationCircleIcon {...icon} />,
-        name: "add items",
+        icon: <SquaresPlusIcon {...icon} />,
+        name: "add item",
+        path: "/add-item",
+        element: <ItemForm key={"add-item"} mode="create" />,
+      },
+    ],
+  },
+  {
+    title: "Orders",
+    layout: "dashboard",
+    pages: [
+      {
+        icon: <DocumentDuplicateIcon {...icon} />,
+        name: "view Orders",
+        path: "/items",
+        element: <ViewItems />,
+      },
+      {
+        icon: <DocumentPlusIcon {...icon} />,
+        name: "add order",
         path: "/add-item",
         element: <ItemForm key={"add-item"} mode="create" />,
       },
