@@ -19,6 +19,7 @@ import { toast, ToastContainer } from "react-toastify";
 import { useNavigate, useParams } from "react-router-dom";
 import { Select } from "antd";
 import ImgUpload from "@/widgets/imgUpload";
+import { BackButton } from "@/widgets";
 
 const itemSchema = z.object({
   itemName: z.string().min(1, "Item name is required"),
@@ -36,8 +37,6 @@ export function ItemForm({ mode = "create" }) {
   const [fileList, setFileList] = useState([]);
   const navigate = useNavigate();
   const { id } = useParams();
-
-  console.log({ fileList });
 
   const {
     register,
@@ -69,7 +68,7 @@ export function ItemForm({ mode = "create" }) {
 
   useEffect(() => {
     if (isSuccess && itemData) {
-      reset(itemData);
+      reset({ ...itemData, supplier: itemData.supplier._id });
       setFileList(
         itemData?.itemImages?.map((image) => ({
           url: image,
@@ -123,13 +122,20 @@ export function ItemForm({ mode = "create" }) {
   if (isLoading) return <div>Loading...</div>;
   if (isError) return <div>Error fetching Items</div>;
 
+  console.log({ activeSuppliers, itemData });
+
   return (
     <div className="mt-12 mb-8 flex flex-col gap-12">
       <Card>
-        <CardHeader variant="gradient" color="gray" className="mb-8 p-6">
+        <CardHeader
+          variant="gradient"
+          color="gray"
+          className="mb-8 p-6 flex justify-between items-center"
+        >
           <Typography variant="h6" color="white">
             {mode === "edit" ? "Edit" : "Add"} Item
           </Typography>
+          <BackButton />
         </CardHeader>
         <CardBody className="min-h-[630px] overflow-x-auto px-5 pt-8 pb-14">
           <div className="w-full bg-white flex items-center justify-center">
@@ -266,7 +272,7 @@ export function ItemForm({ mode = "create" }) {
                       ),
                       value: supplier?._id,
                     }))}
-                    defaultValue={itemData?.supplier}
+                    defaultValue={itemData?.supplier?._id}
                     className="w-full"
                   />
 

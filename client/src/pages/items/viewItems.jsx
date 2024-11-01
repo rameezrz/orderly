@@ -8,20 +8,31 @@ import {
   Chip,
 } from "@material-tailwind/react";
 import { useQuery } from "@tanstack/react-query";
-import { fetchItemsAPI, fetchSuppliers } from "@/api";
+import { fetchItemsAPI } from "@/api";
 import { useNavigate } from "react-router-dom";
 import { EllipsisHorizontalIcon } from "@heroicons/react/24/solid";
 
 const ItemsTable = ({ data, isLoading }) => {
   const navigate = useNavigate();
   const handleMenuClick = (e, rowId) => {
-    navigate(`/dashboard/edit-item/${rowId}`);
+    switch (e.key) {
+      case "1":
+        navigate(`/dashboard/edit-item/${rowId}`);
+        break;
+      case "2":
+        navigate(`/dashboard/item/${rowId}`);
+        break;
+    }
   };
 
   const actions = [
     {
       key: "1",
       label: "Edit",
+    },
+    {
+      key: "2",
+      label: "View Details",
     },
   ];
 
@@ -34,6 +45,14 @@ const ItemsTable = ({ data, isLoading }) => {
       title: "Name",
       dataIndex: "itemName",
       sorter: (a, b) => a.itemName.length - b.itemName.length,
+      render: (text, record) => (
+        <span
+          onClick={() => navigate(`/dashboard/item/${record._id}`)}
+          className="cursor-pointer text-blue-600 hover:underline"
+        >
+          {text}
+        </span>
+      ),
     },
     {
       title: "Location",
@@ -53,7 +72,7 @@ const ItemsTable = ({ data, isLoading }) => {
     {
       title: "Unit Price",
       dataIndex: "unitPrice",
-      sorter: (a, b) => a.unitPrice.length - b.unitPrice.length,
+      sorter: (a, b) => a.unitPrice - b.unitPrice,
     },
     {
       title: "Status",

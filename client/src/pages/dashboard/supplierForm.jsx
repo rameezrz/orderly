@@ -14,6 +14,7 @@ import { toast, ToastContainer } from "react-toastify";
 import { useNavigate, useParams } from "react-router-dom";
 import countries from "@/lib/data/countries.json";
 import { Select } from "antd";
+import { BackButton } from "@/widgets";
 
 const supplierSchema = z.object({
   supplierName: z.string().min(1, "Supplier name is required"),
@@ -100,10 +101,15 @@ export function SupplierForm({ mode = "create" }) {
   return (
     <div className="mt-12 mb-8 flex flex-col gap-12">
       <Card>
-        <CardHeader variant="gradient" color="gray" className="mb-8 p-6">
+        <CardHeader
+          variant="gradient"
+          color="gray"
+          className="mb-8 p-6 flex justify-between items-center"
+        >
           <Typography variant="h6" color="white">
             {mode === "edit" ? "Edit" : "Add"} Supplier
           </Typography>
+          <BackButton />
         </CardHeader>
         <CardBody className="min-h-[630px] overflow-x-auto px-5 pt-8 pb-14">
           <div className="w-full bg-white flex items-center justify-center">
