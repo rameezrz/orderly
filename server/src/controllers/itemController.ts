@@ -43,6 +43,22 @@ export const getItems = async (
   }
 };
 
+export const getAllActiveItemNames = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const suppliers = await itemRepository.getAllActiveItemNames();
+
+    res.status(200).json({
+      suppliers,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
 export const getItemById = async (
   req: Request,
   res: Response,

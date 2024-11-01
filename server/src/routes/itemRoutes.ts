@@ -7,6 +7,7 @@ import {
   getItemById,
   updateItem,
   deleteItem,
+  getAllActiveItemNames,
 } from "../controllers";
 import { upload } from "../config";
 
@@ -19,6 +20,7 @@ router.post(
   createItem
 );
 router.get("/", getItems);
+router.get("/active", getAllActiveItemNames);
 router.get("/:id", getItemById);
 router.put("/:id", validate(updateItemSchema), updateItem);
 router.delete("/:id", deleteItem);

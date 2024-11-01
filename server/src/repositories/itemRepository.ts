@@ -34,11 +34,20 @@ class ItemRepository {
 
   async getItemById(id: string): Promise<IItem | null> {
     validateObjectIdOrThrow(id);
-    const item = await Item.findById(id);
+    const item = await Item.findById(id).populate("supplier").exec();
     if (!item) {
       throw new AppError("No item found with this id", 404);
     }
     return item;
+  }
+
+  async getAllActiveItemNames(): Promise<
+    Pick<IItem, "itemNo" | "itemName" | "unitPrice" | "stockUnit" | "_id">[]
+  > {
+    return await Item.find(
+      { status: "Enabled" },
+      { itemNo: 1, itemName: 1, unitPrice: 1, stockUnit: 1, _id: 1 }
+    ).exec();
   }
 
   async getItemCount(): Promise<number> {
