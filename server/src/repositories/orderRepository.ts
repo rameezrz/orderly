@@ -58,10 +58,20 @@ class OrderRepository {
       .exec();
   }
 
-  async getOrders(): Promise<IOrder[]> {
+  async getOrderCount(): Promise<number> {
+    return await Order.countDocuments().exec();
+  }
+
+  async getOrders(page: number = 1, limit: number = 10): Promise<IOrder[]> {
+    const skip = (page - 1) * limit;
     return await Order.find()
-      .populate("supplier")
-      .populate("items.item")
+      .skip(skip)
+      .limit(limit)
+      .populate({ path: "supplier", select: "_id supplierNo supplierName" })
+      .populate({
+        path: "items.item",
+        select: "_id itemNo itemName unitPrice stockUnit",
+      })
       .exec();
   }
 

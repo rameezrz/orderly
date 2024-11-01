@@ -39,8 +39,19 @@ export const getOrders = async (
   next: NextFunction
 ) => {
   try {
-    const orders = await orderRepository.getOrders();
-    res.json(orders);
+    const page = parseInt(req.query.page as string) || 1;
+    const limit = parseInt(req.query.limit as string) || 10;
+
+    if (page < 1 || limit < 1) {
+      throw new AppError("Page and limit must be positive integers.", 400);
+    }
+
+    const orders = await orderRepository.getOrders(page, limit);
+
+    const totalOrders = await orderRepository.getOrderCount();
+    const totalPages = Math.ceil(totalOrders / limit);
+
+    res.status(200).json({ page, limit, totalOrders, totalPages, orders });
   } catch (error) {
     next(error);
   }
