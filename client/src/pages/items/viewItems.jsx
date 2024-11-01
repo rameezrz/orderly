@@ -8,14 +8,14 @@ import {
   Chip,
 } from "@material-tailwind/react";
 import { useQuery } from "@tanstack/react-query";
-import { fetchSuppliers } from "@/api";
+import { fetchItemsAPI, fetchSuppliers } from "@/api";
 import { useNavigate } from "react-router-dom";
 import { EllipsisHorizontalIcon } from "@heroicons/react/24/solid";
 
-const SuppliersTable = ({ data, isLoading }) => {
+const ItemsTable = ({ data, isLoading }) => {
   const navigate = useNavigate();
   const handleMenuClick = (e, rowId) => {
-    navigate(`/dashboard/edit-supplier/${rowId}`);
+    navigate(`/dashboard/edit-item/${rowId}`);
   };
 
   const actions = [
@@ -27,38 +27,33 @@ const SuppliersTable = ({ data, isLoading }) => {
 
   const columns = [
     {
-      title: "Supplier No",
-      dataIndex: "supplierNo",
+      title: "Item No",
+      dataIndex: "itemNo",
     },
     {
       title: "Name",
-      dataIndex: "supplierName",
-      sorter: (a, b) => a.supplierName.length - b.supplierName.length,
+      dataIndex: "itemName",
+      sorter: (a, b) => a.itemName.length - b.itemName.length,
     },
     {
-      title: "Address",
-      dataIndex: "address",
-      sorter: (a, b) => a.address.length - b.address.length,
+      title: "Location",
+      dataIndex: "inventoryLocation",
+      sorter: (a, b) => a.inventoryLocation.length - b.inventoryLocation.length,
     },
     {
-      title: "Tax No",
-      dataIndex: "taxNo",
-      sorter: (a, b) => a.taxNo.length - b.taxNo.length,
+      title: "Brand",
+      dataIndex: "brand",
+      sorter: (a, b) => a.brand.length - b.brand.length,
     },
     {
-      title: "Country",
-      dataIndex: "country",
-      sorter: (a, b) => a.country.length - b.country.length,
+      title: "Category",
+      dataIndex: "category",
+      sorter: (a, b) => a.category.length - b.category.length,
     },
     {
-      title: "Email",
-      dataIndex: "email",
-      sorter: (a, b) => a.email.length - b.email.length,
-    },
-    {
-      title: "Mobile",
-      dataIndex: "mobileNo",
-      sorter: (a, b) => a.mobileNo.length - b.mobileNo.length,
+      title: "Unit Price",
+      dataIndex: "unitPrice",
+      sorter: (a, b) => a.unitPrice.length - b.unitPrice.length,
     },
     {
       title: "Status",
@@ -68,7 +63,7 @@ const SuppliersTable = ({ data, isLoading }) => {
         return (
           <Chip
             variant="gradient"
-            color={status === "Active" ? "green" : "blue-gray"}
+            color={status === "Enabled" ? "green" : "blue-gray"}
             value={status}
             className="py-0.5 px-2 text-[11px] font-medium w-fit"
           />
@@ -110,17 +105,16 @@ const SuppliersTable = ({ data, isLoading }) => {
   );
 };
 
-export function Suppliers() {
+export function ViewItems() {
   const [currentPage, setCurrentPage] = useState(1);
 
   const { data, isLoading, isError } = useQuery({
-    queryKey: ["suppliers", currentPage],
-    queryFn: () => fetchSuppliers({ page: currentPage, limit: 10 }),
+    queryKey: ["items", currentPage],
+    queryFn: () => fetchItemsAPI({ page: currentPage, limit: 10 }),
     keepPreviousData: true,
   });
 
   const onPageChange = (page) => {
-    console.log({ page });
     setCurrentPage(page);
   };
 
@@ -133,15 +127,15 @@ export function Suppliers() {
       <Card>
         <CardHeader variant="gradient" color="gray" className="mb-8 p-6">
           <Typography variant="h6" color="white">
-            All Suppliers
+            All Items
           </Typography>
         </CardHeader>
         <CardBody className="min-h-[630px] overflow-x-auto px-5 pt-0 pb-2 flex flex-col gap-8 items-center">
-          <SuppliersTable data={data?.suppliers} isLoading={isLoading} />
+          <ItemsTable data={data?.items} isLoading={isLoading} />
           <Pagination
             current={currentPage}
             pageSize={10}
-            total={data?.totalSuppliers || 0}
+            total={data?.totalItems || 0}
             onChange={onPageChange}
           />
         </CardBody>
@@ -150,4 +144,4 @@ export function Suppliers() {
   );
 }
 
-export default Suppliers;
+export default ViewItems;
