@@ -14,6 +14,7 @@ import {
   ItemForm,
   ViewItems,
   ViewSingleItem,
+  ViewOrders,
 } from "./pages";
 
 const icon = {
@@ -75,8 +76,8 @@ export const routes = [
       {
         icon: <DocumentDuplicateIcon {...icon} />,
         name: "view Orders",
-        path: "/items",
-        element: <ViewItems />,
+        path: "/orders",
+        element: <ViewOrders />,
       },
       {
         icon: <DocumentPlusIcon {...icon} />,

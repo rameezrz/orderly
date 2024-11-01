@@ -142,7 +142,10 @@ export function ViewSingleItem() {
                     <DetailRow label="Stock Unit" value={itemData.stockUnit} />
                     <DetailRow
                       label="Unit Price"
-                      value={`$${itemData.unitPrice.toFixed(2)}`}
+                      value={new Intl.NumberFormat("en-US", {
+                        style: "currency",
+                        currency: "USD",
+                      }).format(itemData.unitPrice)}
                     />
                     <DetailRow label="Status" value={itemData.status} />
                   </div>

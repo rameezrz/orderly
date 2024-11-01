@@ -8,11 +8,11 @@ import {
   Chip,
 } from "@material-tailwind/react";
 import { useQuery } from "@tanstack/react-query";
-import { fetchItemsAPI } from "@/api";
+import { fetchItemsAPI, fetchOrdersAPI } from "@/api";
 import { useNavigate } from "react-router-dom";
 import { EllipsisHorizontalIcon } from "@heroicons/react/24/solid";
 
-const ItemsTable = ({ data, isLoading }) => {
+const OrdersTable = ({ data, isLoading }) => {
   const navigate = useNavigate();
   const handleMenuClick = (e, rowId) => {
     switch (e.key) {
@@ -38,13 +38,8 @@ const ItemsTable = ({ data, isLoading }) => {
 
   const columns = [
     {
-      title: "Item No",
-      dataIndex: "itemNo",
-    },
-    {
-      title: "Name",
-      dataIndex: "itemName",
-      sorter: (a, b) => a.itemName.length - b.itemName.length,
+      title: "Order No",
+      dataIndex: "orderNo",
       render: (text, record) => (
         <span
           onClick={() => navigate(`/dashboard/item/${record._id}`)}
@@ -55,24 +50,28 @@ const ItemsTable = ({ data, isLoading }) => {
       ),
     },
     {
-      title: "Location",
-      dataIndex: "inventoryLocation",
-      sorter: (a, b) => a.inventoryLocation.length - b.inventoryLocation.length,
+      title: "Date",
+      dataIndex: "orderDate",
+      sorter: (a, b) => new Date(a.orderDate) - new Date(b.orderDate),
+      render: (text) => {
+        const date = new Date(text);
+        const day = String(date.getDate()).padStart(2, "0");
+        const month = String(date.getMonth() + 1).padStart(2, "0");
+        const year = date.getFullYear();
+        return `${day}/${month}/${year}`;
+      },
     },
     {
-      title: "Brand",
-      dataIndex: "brand",
-      sorter: (a, b) => a.brand.length - b.brand.length,
+      title: "Supplier Name",
+      dataIndex: "supplier",
+      sorter: (a, b) =>
+        a.supplier?.supplierName.localeCompare(b.supplier?.supplierName),
+      render: (supplier) => supplier?.supplierName || "-",
     },
     {
-      title: "Category",
-      dataIndex: "category",
-      sorter: (a, b) => a.category.length - b.category.length,
-    },
-    {
-      title: "Unit Price",
-      dataIndex: "unitPrice",
-      sorter: (a, b) => a.unitPrice - b.unitPrice,
+      title: "Item Total",
+      dataIndex: "itemTotal",
+      sorter: (a, b) => a.itemTotal - b.itemTotal,
       render: (value) =>
         new Intl.NumberFormat("en-US", {
           style: "currency",
@@ -80,19 +79,24 @@ const ItemsTable = ({ data, isLoading }) => {
         }).format(value),
     },
     {
-      title: "Status",
-      dataIndex: "status",
-      sorter: (a, b) => a.status.length - b.status.length,
-      render: (status) => {
-        return (
-          <Chip
-            variant="gradient"
-            color={status === "Enabled" ? "green" : "blue-gray"}
-            value={status}
-            className="py-0.5 px-2 text-[11px] font-medium w-fit"
-          />
-        );
-      },
+      title: "Discount Total",
+      dataIndex: "discountTotal",
+      sorter: (a, b) => a.discountTotal - b.discountTotal,
+      render: (value) =>
+        new Intl.NumberFormat("en-US", {
+          style: "currency",
+          currency: "USD",
+        }).format(value),
+    },
+    {
+      title: "Net Amount",
+      dataIndex: "netAmount",
+      sorter: (a, b) => a.netAmount - b.netAmount,
+      render: (value) =>
+        new Intl.NumberFormat("en-US", {
+          style: "currency",
+          currency: "USD",
+        }).format(value),
     },
     {
       title: "Action",
@@ -129,12 +133,12 @@ const ItemsTable = ({ data, isLoading }) => {
   );
 };
 
-export function ViewItems() {
+export function ViewOrders() {
   const [currentPage, setCurrentPage] = useState(1);
 
   const { data, isLoading, isError } = useQuery({
-    queryKey: ["items", currentPage],
-    queryFn: () => fetchItemsAPI({ page: currentPage, limit: 10 }),
+    queryKey: ["orders", currentPage],
+    queryFn: () => fetchOrdersAPI({ page: currentPage, limit: 10 }),
     keepPreviousData: true,
     refetchOnWindowFocus: false,
   });
@@ -152,11 +156,11 @@ export function ViewItems() {
       <Card>
         <CardHeader variant="gradient" color="gray" className="mb-8 p-6">
           <Typography variant="h6" color="white">
-            All Items
+            All Orders
           </Typography>
         </CardHeader>
         <CardBody className="min-h-[630px] overflow-x-auto px-5 pt-0 pb-2 flex flex-col gap-8 items-center">
-          <ItemsTable data={data?.items} isLoading={isLoading} />
+          <OrdersTable data={data} isLoading={isLoading} />
           <Pagination
             current={currentPage}
             pageSize={10}
@@ -169,4 +173,4 @@ export function ViewItems() {
   );
 }
 
-export default ViewItems;
+export default ViewOrders;
