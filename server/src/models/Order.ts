@@ -1,5 +1,10 @@
 import mongoose, { Document, Schema, Types } from "mongoose";
 
+interface ISupplier {
+  _id: Types.ObjectId;
+  supplierName: string;
+}
+
 export interface IOrderItem {
   item: Types.ObjectId;
   orderQty: number;
@@ -11,7 +16,7 @@ export interface IOrderItem {
 export interface IOrder extends Document {
   orderNo: string;
   orderDate: Date;
-  supplier: Types.ObjectId;
+  supplier: Types.ObjectId | ISupplier;
   items: IOrderItem[];
   itemTotal: number;
   discountTotal: number;

@@ -63,6 +63,16 @@ class OrderRepository {
     return await Order.countDocuments().exec();
   }
 
+  async getAllOrders(): Promise<IOrder[]> {
+    return await Order.find()
+      .populate({ path: "supplier", select: "_id supplierNo supplierName" })
+      .populate({
+        path: "items.item",
+        select: "_id itemNo itemName unitPrice stockUnit",
+      })
+      .exec();
+  }
+
   async getOrders(page: number = 1, limit: number = 10): Promise<IOrder[]> {
     const skip = (page - 1) * limit;
     return await Order.find()

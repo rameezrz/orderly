@@ -1,7 +1,9 @@
 import { Request, Response, NextFunction } from "express";
-import { orderRepository } from "../repositories";
+import { orderRepository, supplierRepository } from "../repositories";
 import { validateObjectIdOrThrow } from "../validations";
 import { AppError } from "../utils";
+import ExcelJS from "exceljs";
+import { ISupplier } from "../models";
 
 export const createOrder = async (
   req: Request,
@@ -88,5 +90,57 @@ export const deleteOrder = async (
     res.status(204).send();
   } catch (error) {
     next(error);
+  }
+};
+
+export const exportOrdersToExcel = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const orders = await orderRepository.getAllOrders();
+
+    const workbook = new ExcelJS.Workbook();
+    const worksheet = workbook.addWorksheet("Purchase Orders");
+
+    worksheet.columns = [
+      { header: "Order No", key: "orderNo", width: 20 },
+      { header: "Order Date", key: "orderDate", width: 20 },
+      { header: "Supplier", key: "supplier", width: 30 },
+      { header: "Item Total", key: "itemTotal", width: 15 },
+      { header: "Discount Total", key: "discountTotal", width: 15 },
+      { header: "Net Amount", key: "netAmount", width: 15 },
+      { header: "Created At", key: "createdAt", width: 20 },
+    ];
+
+    orders.forEach(async (order) => {
+      const supplierName = (order.supplier as ISupplier)?.supplierName || "N/A";
+      worksheet.addRow({
+        orderNo: order.orderNo,
+        orderDate: order.orderDate.toISOString().slice(0, 10),
+        supplier: supplierName,
+        itemTotal: order.itemTotal,
+        discountTotal: order.discountTotal,
+        netAmount: order.netAmount,
+        createdAt: order.createdAt
+          ? order.createdAt.toISOString().slice(0, 10)
+          : null,
+      });
+    });
+
+    res.setHeader(
+      "Content-Disposition",
+      "attachment; filename=Orderly_Purchase_Orders.xlsx"
+    );
+    res.setHeader(
+      "Content-Type",
+      "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+    );
+
+    await workbook.xlsx.write(res);
+    res.end();
+  } catch (error) {
+    next(new AppError("Failed to export orders", 500));
   }
 };
