@@ -115,7 +115,7 @@ export function Suppliers() {
 
   const { data, isLoading, isError } = useQuery({
     queryKey: ["suppliers", currentPage],
-    queryFn: () => fetchSuppliers({ page: currentPage, limit: 10 }),
+    queryFn: () => fetchSuppliers({ page: currentPage, limit: 6 }),
     keepPreviousData: true,
   });
 
@@ -140,7 +140,7 @@ export function Suppliers() {
           <SuppliersTable data={data?.suppliers} isLoading={isLoading} />
           <Pagination
             current={currentPage}
-            pageSize={10}
+            pageSize={6}
             total={data?.totalSuppliers || 0}
             onChange={onPageChange}
           />

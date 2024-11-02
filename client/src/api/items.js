@@ -5,6 +5,11 @@ export const fetchItemsAPI = async ({ page = 1, limit = 10 }) => {
   return response.data;
 };
 
+export const fetchActiveItemsAPI = async () => {
+  const response = await axios.get(`/items/active`);
+  return response?.data?.suppliers;
+};
+
 export const fetchItemById = async (id) => {
   const response = await axios.get(`/items/${id}`);
   return response.data;

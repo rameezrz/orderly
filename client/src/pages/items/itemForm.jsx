@@ -331,6 +331,7 @@ export function ItemForm({ mode = "create" }) {
                     <input
                       id="unitPrice"
                       type="number"
+                      step="any"
                       defaultValue={1}
                       {...register("unitPrice", { valueAsNumber: true })}
                       className="py-1 px-3 mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-black focus:ring focus:ring-black focus:ring-opacity-50"

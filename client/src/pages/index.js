@@ -5,3 +5,5 @@ export * from "./items/viewSingleItem";
 export * from "./suppliers/suppliers";
 export * from "./suppliers/supplierForm";
 export * from "./orders/viewOrders";
+export * from "./orders/orderForm";
+export * from "./orders/viewSingleOrder";

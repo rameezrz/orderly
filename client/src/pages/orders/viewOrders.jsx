@@ -8,7 +8,7 @@ import {
   Chip,
 } from "@material-tailwind/react";
 import { useQuery } from "@tanstack/react-query";
-import { fetchItemsAPI, fetchOrdersAPI } from "@/api";
+import { exportToExcel, fetchItemsAPI, fetchOrdersAPI } from "@/api";
 import { useNavigate } from "react-router-dom";
 import { EllipsisHorizontalIcon } from "@heroicons/react/24/solid";
 
@@ -17,7 +17,7 @@ const OrdersTable = ({ data, isLoading }) => {
   const handleMenuClick = (e, rowId) => {
     switch (e.key) {
       case "1":
-        navigate(`/dashboard/edit-item/${rowId}`);
+        navigate(`/dashboard/order/${rowId}`);
         break;
       case "2":
         navigate(`/dashboard/item/${rowId}`);
@@ -28,10 +28,6 @@ const OrdersTable = ({ data, isLoading }) => {
   const actions = [
     {
       key: "1",
-      label: "Edit",
-    },
-    {
-      key: "2",
       label: "View Details",
     },
   ];
@@ -42,7 +38,7 @@ const OrdersTable = ({ data, isLoading }) => {
       dataIndex: "orderNo",
       render: (text, record) => (
         <span
-          onClick={() => navigate(`/dashboard/item/${record._id}`)}
+          onClick={() => navigate(`/dashboard/order/${record._id}`)}
           className="cursor-pointer text-blue-600 hover:underline"
         >
           {text}
@@ -154,17 +150,29 @@ export function ViewOrders() {
   return (
     <div className="mt-12 mb-8 flex flex-col gap-12">
       <Card>
-        <CardHeader variant="gradient" color="gray" className="mb-8 p-6">
+        <CardHeader
+          variant="gradient"
+          color="gray"
+          className="mb-8 p-6 flex justify-between items-center"
+        >
           <Typography variant="h6" color="white">
             All Orders
           </Typography>
+          <div>
+            <button
+              className="px-4 py-2 bg-gray-100 font-bold text-black rounded-md shadow hover:bg-gray-600 hover:text-white transition"
+              onClick={exportToExcel}
+            >
+              Download Excel
+            </button>
+          </div>
         </CardHeader>
         <CardBody className="min-h-[630px] overflow-x-auto px-5 pt-0 pb-2 flex flex-col gap-8 items-center">
-          <OrdersTable data={data} isLoading={isLoading} />
+          <OrdersTable data={data?.orders} isLoading={isLoading} />
           <Pagination
             current={currentPage}
             pageSize={10}
-            total={data?.totalItems || 0}
+            total={data?.totalOrders || 0}
             onChange={onPageChange}
           />
         </CardBody>

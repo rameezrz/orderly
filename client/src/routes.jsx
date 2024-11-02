@@ -15,6 +15,8 @@ import {
   ViewItems,
   ViewSingleItem,
   ViewOrders,
+  OrderForm,
+  ViewSingleOrder,
 } from "./pages";
 
 const icon = {
@@ -82,8 +84,8 @@ export const routes = [
       {
         icon: <DocumentPlusIcon {...icon} />,
         name: "add order",
-        path: "/add-item",
-        element: <ItemForm key={"add-item"} mode="create" />,
+        path: "/add-order",
+        element: <OrderForm key={"add-item"} mode="create" />,
       },
     ],
   },
@@ -107,6 +109,12 @@ export const routes = [
         name: "view Item",
         path: "/item/:id",
         element: <ViewSingleItem key={"view-item"} />,
+      },
+      {
+        icon: <HomeIcon {...icon} />,
+        name: "view Order",
+        path: "/order/:id",
+        element: <ViewSingleOrder key={"view-order"} />,
       },
     ],
   },
